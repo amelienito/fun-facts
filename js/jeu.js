@@ -320,20 +320,6 @@ function choisirDepart() {
   return revus.length ? revus[0].id : null;
 }
 
-// Pronostic de début de partie : un bonus si on le tient, rien à perdre sinon.
-function blocPronostic() {
-  const bloc = h("div", { class: "prono" }, h("span", null, "Tu te mets combien sur 10 ?"));
-  const fermer = () => { bloc.classList.add("parti"); setTimeout(() => bloc.remove(), 300); };
-  for (const n of [5, 6, 7, 8, 9, 10]) bloc.append(h("button", { class: "prono-n", type: "button", onclick: () => {
-    if (!partie) return;
-    partie.prono = n; SONS.porte();
-    vider(bloc, h("span", null, `Pronostic : ${n}/10. Tiens-le pour un bonus.`));
-    setTimeout(fermer, 1600);
-  } }, n));
-  bloc.append(h("button", { class: "prono-passer", type: "button", onclick: () => { if (partie) partie.prono = 0; fermer(); } }, "Passer"));
-  return bloc;
-}
-
 function afficherFait(id, premier) {
   const s = salleParId[id];
   etat.pistes = etat.pistes.filter((x) => x !== id);
@@ -988,15 +974,6 @@ function finPartie() {
   const p = partie;
   const ratio = p.questions ? p.bonnes / p.questions : 0;
   const cle = String(p.total);
-  const note = Math.round(ratio * 10);
-  let bonusProno = 0;
-  if (p.prono) {
-    bonusProno = note >= p.prono ? p.prono * 100 * (note === p.prono ? 2 : 1) : 0;
-    if (bonusProno) { p.score += bonusProno; gagner(bonusProno); }
-  }
-  const lignePronostic = p.prono ? h("p", { class: "prono-bilan" }, note >= p.prono
-    ? [h("b", null, note === p.prono ? "Pronostic pile tenu !" : "Pronostic tenu !"), ` Tu visais ${p.prono}/10, tu fais ${note}/10 : +${bonusProno.toLocaleString("fr-FR")} points.`]
-    : [h("b", null, "Pronostic raté."), ` Tu visais ${p.prono}/10, tu fais ${note}/10. Aucun point perdu.`]) : null;
   const ancien = etat.meilleurs[cle] || 0;
   const record = p.score > ancien;
   if (record) { etat.meilleurs[cle] = p.score; sauver(); }
@@ -1010,7 +987,6 @@ function finPartie() {
     h("div", { class: "etiquettes" }, h("span", { class: "etiq" }, `Partie de ${p.total}`), record ? h("span", { class: "etiq pepite" }, ancien ? "Nouveau record" : "Premier record") : null),
     h("h1", { class: "question titre-fin", tabindex: "-1" }, titre),
     h("p", { class: "score-ligne" }, score, h("span", null, "points")),
-    lignePronostic,
     h("ul", { class: "stats" },
       h("li", null, h("b", null, `${p.bonnes}/${p.questions}`), "bonnes réponses"),
       h("li", null, h("b", null, p.comboMax), "meilleur combo"),

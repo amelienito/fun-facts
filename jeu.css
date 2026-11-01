@@ -574,13 +574,7 @@ dialog.objet-dlg { background: radial-gradient(ellipse at 50% 40%, #fff6e0, #f1e
 .lb-bilan { padding-left: 1.2em; line-height: 1.8; }
 .lb-score-final { font-family: "Bungee", var(--titre); font-size: 1.6rem; }
 
-/* ---------- Pronostic ---------- */
-.prono { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin: 14px 0 6px; padding: 8px 10px; border-radius: 16px; background: rgba(0, 0, 0, 0.1); width: fit-content; max-width: 100%; transition: opacity 0.3s, transform 0.3s; }
-.prono > span { font-weight: 700; font-size: 0.9rem; margin-right: 4px; }
-.prono-n { width: 34px; height: 34px; border-radius: 50%; background: var(--texte); color: var(--fond); font-family: "Bungee", var(--titre); font-size: 0.95rem; }
-.prono-passer { font-size: 0.85rem; text-decoration: underline; text-underline-offset: 3px; padding: 0 6px; opacity: 0.8; }
-.prono.parti { opacity: 0; transform: translateY(-6px); }
-.prono-bilan { font-size: 1.05rem; margin: 6px 0 0; }
+
 
 /* ---------- Estimer ---------- */
 .estimer { max-width: 640px; margin-top: 10px; }
