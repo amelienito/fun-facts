@@ -568,6 +568,7 @@ function repondre(s, qi, z, reps, bouton, val) {
   const presque = val === "presque";
   const cleQ = `${s.id}:${qi}`;
   if (!etat.repondues.includes(cleQ)) { etat.repondues.push(cleQ); sauver(); }
+  if (partie) partie.repondues.add(cleQ);
   const juste = special ? val === true || presque : val === q.reponse;
   if (!special) for (const x of reps.querySelectorAll(".rep")) {
     const v = x.dataset.v === "true" ? true : x.dataset.v === "false" ? false : Number(x.dataset.v);
@@ -623,6 +624,8 @@ function repondre(s, qi, z, reps, bouton, val) {
   }
   // Dernière question : l'objet se révèle et rejoint la collection.
   z.b.classList.add("revele");
+  const img = z.zoneObjet.querySelector(".objet");
+  if (img) { img.classList.add("objet-revele"); img.style.display = "none"; void img.offsetHeight; img.style.display = ""; }
   const nouveau = !etat.trouves[s.id];
   if (nouveau) etat.trouves[s.id] = { date: aujourdhui(), juste };
   if (nouveau && partie) partie.gagnes.push(s.id);
@@ -731,8 +734,8 @@ function suivant(id) {
   // Les intermèdes ne piochent que dans les faits déjà trouvés, jamais dans celui qui arrive juste après.
   if (partie && partie.n > 0 && partie.n % 4 === 0 && partie.n < partie.total) {
     const tous = [
-      [afficherEclair, new Set(affirmationsPossibles(id).map((a) => a.id)).size >= 4],
-      [afficherPlusOuMoins, nombresVus(id).length >= 4],
+      [afficherEclair, new Set(affirmationsPossibles(id).map((a) => a.id)).size >= 3],
+      [afficherPlusOuMoins, nombresVus(id).length >= 3],
       [afficherPaires, pairesVues(id).length >= 3],
     ];
     const dispo = tous.filter(([, ok]) => ok).map(([f]) => f);
@@ -759,7 +762,8 @@ function suivant(id) {
 
 const marquerJoues = (ids) => { if (partie) for (const i of ids) partie.inter.add(i); };
 // Jamais de spoil : un intermède ne pioche que dans des questions auxquelles on a déjà répondu.
-const dejaRepondu = (id, qi) => etat.repondues.includes(`${id}:${qi}`);
+// Uniquement les questions répondues pendant CETTE partie : l'intermède revient sur ce qu'on vient de voir.
+const dejaRepondu = (id, qi) => !!partie && partie.repondues.has(`${id}:${qi}`);
 const salleRepondue = (id) => !!QUESTIONS[id] && QUESTIONS[id].every((_, qi) => dejaRepondu(id, qi));
 const nombresVus = (exclu) => NOMBRES.filter((n) => salleRepondue(n.id) && n.id !== exclu);
 const pairesVues = (exclu) => PAIRES.filter((p) => salleRepondue(p.id) && p.id !== exclu);
@@ -781,6 +785,7 @@ function afficherPlusOuMoins(ensuite, exclu) {
   const chaine = [];
   for (const n of pool) if (chaine.length < 6 && !chaine.some((c) => c.val === n.val)) chaine.push(n);
   marquerJoues(chaine.map((n) => n.id));
+  window.__intermedes?.push({ type: "pom", ids: chaine.map((n) => n.id) });
   const MANCHES = chaine.length - 1;
   const b = nouvelleBande("intermede inter-pom");
   let k = 0, bons = 0;
@@ -832,6 +837,7 @@ function afficherPlusOuMoins(ensuite, exclu) {
 function afficherPaires(ensuite, exclu) {
   const lot = melanger(pairesVues(exclu)).slice(0, 4);
   marquerJoues(lot.map((p) => p.id));
+  window.__intermedes?.push({ type: "paires", ids: lot.map((p) => p.id) });
   const b = nouvelleBande("intermede inter-paires");
   let choisi = null, erreurs = 0, faites = 0;
   const fin = h("div");
@@ -874,6 +880,7 @@ function afficherEclair(ensuite, exclu) {
   const DUREE = 32;
   const tirees = melanger(affirmationsPossibles(exclu)).slice(0, 8);
   marquerJoues(tirees.map((t) => t.id));
+  window.__intermedes?.push({ type: "eclair", cles: tirees.map((t) => `${t.id}:${t.qi}`) });
   // Vrai et faux bien alternés au hasard : jamais trois fois de suite la même réponse.
   let items = [];
   for (let essai = 0; essai < 60; essai++) {
@@ -946,7 +953,7 @@ const estimation = (n) => { const min = Math.max(1, Math.round((n * 25) / 60)); 
 function nouvellePartie(total) {
   etat.longueur = total;
   sauver();
-  partie = { total: Math.min(total, TOTAL), n: 0, score: 0, bonnes: 0, questions: 0, comboMax: 0, gagnes: [], joues: new Set(), inter: new Set(), intermedes: 0, decalage: Math.floor(Math.random() * 4),
+  partie = { total: Math.min(total, TOTAL), n: 0, score: 0, bonnes: 0, questions: 0, comboMax: 0, gagnes: [], joues: new Set(), inter: new Set(), repondues: new Set(), intermedes: 0, decalage: Math.floor(Math.random() * 4),
     seriesAvant: Object.fromEntries(SERIES.map((x) => [x.id, x.ids.filter((id) => etat.trouves[id]).length])) };
   combo = 0;
   const depart = choisirDepart();

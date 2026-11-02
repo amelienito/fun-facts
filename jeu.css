@@ -108,6 +108,8 @@ button.puce:hover { background: rgba(251, 245, 233, 0.2); }
 .bande.clair .objet { filter: brightness(0) invert(1); opacity: 0.32; }
 .bande.clair.revele .objet { opacity: 1; }
 .revele .objet { filter: drop-shadow(0 14px 14px rgba(0, 0, 0, 0.22)); transform: scale(1.12) rotate(-4deg); }
+/* L'objet gagné apparaît en couleurs, quel que soit le fond (la silhouette ne sert qu'avant la réponse). */
+.bande .objet.objet-revele, .bande.clair .objet.objet-revele { filter: drop-shadow(0 14px 14px rgba(0, 0, 0, 0.22)); opacity: 1; transform: scale(1.12) rotate(-4deg); }
 @keyframes flotte { 50% { translate: 0 -8px; } }
 .objet-repli { display: grid; place-items: center; width: 100%; height: 100%; font-family: var(--titre); font-size: 5rem; }
 
