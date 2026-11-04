@@ -162,6 +162,8 @@ html[data-typo="instrument"] .verdict b { font-size: 2.2rem; }
 .saviez { border-left: 4px solid currentColor; padding-left: 14px; }
 .saviez b { display: block; }
 .note { font-size: 1rem; opacity: 0.85; }
+.voir { margin-top: -4px; }
+.voir a { font-weight: 700; text-underline-offset: 3px; }
 .sources { font-size: 0.9375rem; line-height: 1.45; }
 .sources a { font-weight: 700; text-underline-offset: 3px; }
 .acquis {

@@ -38,7 +38,7 @@ const riche = (t) => {
   return t.split(/([⁰¹²³⁴⁵⁶⁷⁸⁹⁻]+)/).filter(Boolean).map((m) => (SUP[m[0]] ? h("sup", null, [...m].map((c) => SUP[c]).join("")) : m));
 };
 // Les réponses se lisent comme une phrase : majuscule à la première seulement (les noms propres gardent la leur).
-const COMMUNS = new Set("le la les l' l’ un une des du de d' d’ dans au aux à en elle il ils elles c'est ce cette son sa ses sans très rien aucun aucune une deux trois cinq douze environ vos payez palmées atrophiées noire dorée rouge bleu collant timide sperm killer pilot humpback même".split(" "));
+const COMMUNS = new Set("le la les l' l’ un une des du de d' d’ dans au aux à en elle il ils elles c'est ce cette son sa ses sans très rien aucun aucune une deux trois cinq douze environ vos payez palmées atrophiées noire dorée rouge bleu collant timide sperm killer pilot humpback même leur verdâtre est".split(" "));
 const premierMot = (t) => (t.match(/^[^\s,]+/) || [""])[0].toLowerCase().replace(/^(l['’]|d['’]).*/, "$1");
 function casse(lib, i, q) {
   if (q.casse === false || !/^\p{L}/u.test(lib)) return lib;
@@ -616,9 +616,10 @@ function repondre(s, qi, z, reps, bouton, val) {
     h("p", { class: "verdict" }, h("b", null, titre), statJoueurs, h("span", { class: "gain" }, juste ? `+${gain.toLocaleString("fr-FR")} points${multiplicateur() > 1 && combo > 1 ? ` · combo de ${combo}` : ""}` : `+${gain} points pour avoir appris quelque chose`)),
     h("p", null, riche(q.explication)),
   ];
+  if (q.voir) lignes.push(h("p", { class: "voir" }, h("a", { href: q.voir.url, target: "_blank", rel: "noopener" }, `${q.voir.texte} ↗`)));
   const total = QUESTIONS[s.id].length;
   if (qi < total - 1) {
-    vider(z.suite, lignes, h("button", { class: "gros-bouton", type: "button", onclick: () => { z.suite.hidden = true; replier(z, q, qi, juste, presque); poser(s, qi + 1, z); } }, "Question suivante"));
+    vider(z.suite, lignes, h("button", { class: "gros-bouton", type: "button", onclick: () => { z.suite.hidden = true; if (QUESTIONS[s.id][qi + 1].relire !== false) replier(z, q, qi, juste, presque); poser(s, qi + 1, z); } }, "Question suivante"));
     z.suite.hidden = false;
     return;
   }

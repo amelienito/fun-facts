@@ -6,12 +6,12 @@
 export const QUESTIONS = {
   cerveau: [{
     type: "vf", texte: "On n'utilise que 10 % de notre cerveau.", reponse: false,
-    explication: "Faux. Les neurologues sont formels : on utilise pratiquement toutes les parties du cerveau. L'imagerie montre que la plupart des régions sont actives au cours d'une journée, même pendant le sommeil.",
+    explication: "Les neurologues sont formels : on utilise pratiquement toutes les parties du cerveau. L'imagerie montre que la plupart des régions sont actives au cours d'une journée, même pendant le sommeil.",
   }],
   cleopatre: [{
     type: "qcm", texte: "Combien d'années séparent la construction de la grande pyramide de Gizeh et la naissance de Cléopâtre ?", ordre: true,
     choix: ["Environ 500 ans", "Environ 1 000 ans", "Environ 2 500 ans", "Environ 4 000 ans"], reponse: 2,
-    explication: "Environ 2 500 ans. La pyramide est achevée au début du XXVe siècle av. J.-C., Cléopâtre naît en 70 ou 69 av. J.-C. Elle est donc plus proche du premier iPhone (2007, environ 2 075 ans plus tard) que de la pyramide.",
+    explication: "Environ 2 500 ans. La pyramide est achevée au début du XXVe siècle avant J.-C., Cléopâtre naît en 70 ou 69 avant J.-C. Elle est donc plus proche du premier iPhone (2007, environ 2 075 ans plus tard) que de la pyramide.",
   }],
   requins: [{
     type: "qcm", texte: "Qui est apparu en premier sur Terre ?",
@@ -22,20 +22,21 @@ export const QUESTIONS = {
     {
       type: "placer", texte: "Nintendo a été fondée à Kyoto. Place sa création sur la frise.", sujet: "Nintendo",
       min: 1666, max: 2007, gauche: "Grand Incendie de Londres", gaucheDate: "1666", droite: "Premier iPhone", droiteDate: "2007",
-      val: 1889, valTexte: "1889", tol: 40,
-      explication: "En 1889. Nintendo indique avoir été fondée en septembre 1889, à Kyoto.",
+      val: 1889, valTexte: "1889", tol: 50,
+      explication: "Nintendo est fondée à Kyoto en 1889.",
     },
     {
       type: "qcm", texte: "Et que fabriquait Nintendo à ses débuts ?",
       choix: ["Des cartes à jouer", "Des jouets en bois", "Des horloges", "Des cerfs-volants"], reponse: 0,
       explication: "Des hanafuda, des cartes à jouer japonaises, que Fusajiro Yamauchi fabrique et vend dès 1889.",
+      voir: { texte: "Voir des hanafuda Nintendo", url: "https://www.wopc.co.uk/japan/flower-cards" },
     },
   ],
   eiffel: [
     {
       type: "qcm", texte: "Que fait la tour Eiffel quand il fait chaud ?",
       choix: ["Elle grandit un peu", "Elle rétrécit un peu", "Elle s'enfonce dans le sol", "Rien du tout"], reponse: 0,
-      explication: "Elle grandit un peu : avec la chaleur, le métal se dilate. Elle gagne quelques millimètres en été, et les reperd en hiver quand il se contracte.",
+      explication: "Elle grandit un peu : avec la chaleur, le métal se dilate. Elle gagne quelques millimètres en été, et les reperd en hiver quand le métal se contracte.",
     },
     {
       type: "qcm", texte: "Et par grand soleil, que fait son sommet ?",
@@ -46,7 +47,7 @@ export const QUESTIONS = {
 
   coucou: [{
     type: "qcm", texte: "Où le coucou gris pond-il ses œufs ?",
-    choix: ["Dans le nid d'autres oiseaux", "Dans un trou qu'il creuse dans un arbre", "À même le sol", "Dans un nid qu'il construit en couple"], reponse: 0,
+    choix: ["Dans le nid d'autres oiseaux", "Dans un trou qu'il creuse dans un arbre", "À même le sol", "Le coucou gris ne pond pas d'œufs"], reponse: 0,
     explication: "Dans le nid d'autres oiseaux. Le coucou gris est un parasite de couvée : d'autres espèces couvent son œuf, puis nourrissent le poussin comme s'il était le leur.",
   }],
   hiboux: [{
@@ -61,7 +62,7 @@ export const QUESTIONS = {
   }],
   dragonnier: [{
     type: "qcm", texte: "Quand on entaille le tronc du dragonnier, un arbre de l'île de Socotra, de quelle couleur est la résine qui en coule ?",
-    choix: ["Rouge sang", "Bleu nuit", "Noire", "Dorée"], reponse: 0,
+    choix: ["Rouge sang", "Bleu nuit", "Noire", "Verdâtre"], reponse: 0,
     explication: "Rouge sang. Cette résine, appelée « sang-de-dragon », sert depuis l'Antiquité de colorant et de remède. L'arbre ne pousse que sur l'île yéménite de Socotra.",
   }],
   cachalot: [{
@@ -87,7 +88,7 @@ export const QUESTIONS = {
   farriner: [{
     type: "qcm", texte: "Où le Grand Incendie de Londres a-t-il démarré, en 1666 ?",
     choix: ["Dans une boulangerie", "Dans une taverne", "Dans une église", "Sur un navire du port"], reponse: 0,
-    explication: "Dans la boulangerie de Thomas Farriner, sur Pudding Lane. Ce boulanger était connu pour avoir fourni du pain à la Royal Navy.",
+    explication: "Dans la boulangerie de Thomas Farriner, sur Pudding Lane. Ce boulanger est surtout entré dans l'histoire pour avoir été, malgré lui, à l'origine de l'un des pires incendies qu'ait connus la ville. Bilan : environ 13 200 maisons brûlées, 87 églises paroissiales, la cathédrale Saint-Paul et la plupart des bâtiments officiels de la City.",
   }],
   melos: [{
     type: "qcm", texte: "Le « dialogue mélien » : l'île de Mélos invoque la justice pour rester neutre. Que lui répond Athènes ?",
@@ -96,7 +97,7 @@ export const QUESTIONS = {
   }],
   fifa: [{
     type: "qcm", texte: "Dans quelle ville la FIFA a-t-elle été fondée, en 1904 ?",
-    choix: ["Paris", "Londres", "Zurich", "Bruxelles"], reponse: 0,
+    choix: ["Paris", "Londres", "Genève", "Bruxelles"], reponse: 0,
     explication: "À Paris, le 21 mai 1904, au 229 rue Saint-Honoré. La France, la Belgique, le Danemark, les Pays-Bas et la Suisse étaient présents ; l'Angleterre ne l'a rejointe qu'en 1905.",
   }],
   statue: [{
@@ -108,35 +109,38 @@ export const QUESTIONS = {
     type: "qcm", texte: "Dans Le Jardin des délices de Jérôme Bosch, qu'est-ce qui est peint sur les fesses d'un damné ?",
     choix: ["Une partition", "La signature du peintre", "Une carte du monde", "Une prière en latin"], reponse: 0,
     explication: "Une partition : sur le panneau de l'Enfer, en bas à gauche, un damné porte une portée musicale sur le postérieur. Une étudiante américaine l'a transcrite et enregistrée, et le morceau a fait le tour d'Internet en 2014.",
+    voir: { texte: "Écouter le morceau", url: "https://www.youtube.com/watch?v=OnrICy3Bc2U" },
   }],
   bocklin: [{
     type: "qcm", texte: "Combien de versions de L'Île des morts Arnold Böcklin a-t-il peintes ?", ordre: true,
     choix: ["Une seule", "Deux", "Cinq", "Douze"], reponse: 2,
     explication: "Cinq, entre 1880 et 1886. Une sixième a été achevée en 1901 par son fils Carlo, avec lui. L'une des versions a été détruite à Berlin pendant la Seconde Guerre mondiale.",
+    voir: { texte: "Voir la version du Met, en haute définition", url: "https://www.metmuseum.org/art/collection/search/435683" },
   }],
   droste: [{
     type: "qcm", texte: "L'effet Droste, cette image qui se répète à l'intérieur d'elle-même, doit son nom à…",
     choix: ["Une marque de cacao", "Un mathématicien néerlandais", "Un peintre flamand", "Une ville allemande"], reponse: 0,
     explication: "Une marque de cacao : les boîtes Droste montraient une infirmière portant un plateau avec une boîte identique, sur laquelle on retrouvait la même scène, et ainsi de suite.",
+    voir: { texte: "Voir une boîte Droste ancienne", url: "https://victoriancollections.net.au/items/4f72acfc97f83e0308603a4f" },
   }],
   beksinski: [{
-    type: "qcm", texte: "Quel titre ce peintre polonais du XXe siècle donnait-il à ses tableaux ?",
+    type: "qcm", texte: "Quel titre Zdzisław Beksiński donnait-il à ses tableaux ?",
     choix: ["Aucun", "Un prénom", "Un mot inventé", "Un lieu"], reponse: 0,
-    explication: "Aucun : il ne nommait ni ses dessins ni ses tableaux, car ses œuvres n'avaient pas à être expliquées. Il disait ne pas savoir lui-même ce qu'elles signifiaient.",
+    explication: "Aucun : Zdzisław Beksiński ne nommait ni ses dessins ni ses tableaux, car ses œuvres n'avaient pas à être expliquées. Il disait ne pas savoir lui-même ce qu'elles signifiaient.",
   }, {
-    type: "qcm", texte: "Et comment s'écrit le nom de ce peintre ?",
+    type: "qcm", texte: "Et comment s'écrit le nom de ce peintre polonais, déjà ?", relire: false,
     choix: ["Zdzisław Beksiński", "Zdzislaw Bekszinski", "Zdzisłav Beksinsky", "Zdźisław Bekśinski"], reponse: 0,
     explication: "Zdzisław Beksiński, avec un « ł » barré et un « ń » accentué.",
   }],
   quebec: [{
     type: "qcm", casse: false, texte: "Sous quel titre la comédie Le Plus Escroc des deux (1988) est-elle sortie au Québec ?",
-    choix: ["Deux fils de pute", "Deux beaux salauds", "Sales Escrocs", "Les Deux Arnaqueurs"], reponse: 0,
-    explication: "« Deux fils de pute ». Le film de Frank Oz, avec Steve Martin et Michael Caine, s'appelle Dirty Rotten Scoundrels en version originale.",
+    choix: ["Deux fils de pute", "L'arrogante raclure", "Sales escrocs", "Le plus gros des bâtards"], reponse: 0,
+    explication: "Deux fils de pute. Le film de Frank Oz, avec Steve Martin et Michael Caine, s'appelle Dirty Rotten Scoundrels en version originale.",
   }],
   katerine: [{
     type: "qcm", texte: "Dans le film d'animation Jim Queen, quel rôle tient Philippe Katerine ?",
-    choix: ["Une prostate", "Un appendice", "Un rein", "Une vessie"], reponse: 0,
-    explication: "Une prostate. Selon le coréalisateur Marco Nguyen, l'idée venait du producteur, et Katerine a accepté justement parce qu'il s'agissait d'une prostate.",
+    choix: ["Une prostate", "Un appendice", "Un sphincter", "Une vessie"], reponse: 0,
+    explication: "Une prostate. Selon le coréalisateur Marco Nguyen, l'idée venait du producteur. Philippe Katerine a accepté justement parce qu'il s'agissait d'une prostate.",
   }],
   zidane: [{
     type: "qcm", texte: "Pour ses proches, Zinédine Zidane s'appelle…",
@@ -145,7 +149,7 @@ export const QUESTIONS = {
   }],
   cage: [{
     type: "qcm", texte: "Quel lien de parenté unit Nicolas Cage à Francis Ford Coppola ?",
-    choix: ["C'est son neveu", "C'est son fils", "C'est son cousin", "Aucun"], reponse: 0,
+    choix: ["C'est son neveu", "C'est son oncle", "C'est son cousin", "C'est son parrain"], reponse: 0,
     explication: "C'est son neveu : son père, August Coppola, est le frère de Francis Ford Coppola. Nicolas Cage, né Nicolas Coppola, est donc le cousin germain de Sofia Coppola.",
   }],
   trump: [{
@@ -154,24 +158,24 @@ export const QUESTIONS = {
     explication: "Maman, j'ai encore raté l'avion (1992). Il croise Kevin dans le hall de l'hôtel Plaza, qui lui appartenait. Selon le réalisateur Chris Columbus, cette apparition était la condition pour tourner dans l'hôtel.",
   }, {
     type: "multi", texte: "Et dans lesquels de ces films apparaît-il aussi ? Touche-les tous, puis valide.",
-    choix: ["Zoolander", "L'Amour sans préavis", "Wall Street : L'argent ne dort jamais", "Maman, j'ai raté l'avion (le premier)", "Retour vers le futur II", "Le Loup de Wall Street"],
+    choix: ["Zoolander", "L'Amour sans préavis", "Wall Street : L'argent ne dort jamais", "Sonic", "Retour vers le futur III", "Le Loup de Wall Street"],
     bonnes: [0, 1, 2],
-    explication: "Zoolander (2001), L'Amour sans préavis (2002) et Wall Street : L'argent ne dort jamais (2010). Pas dans le premier Maman, j'ai raté l'avion. Et le Biff de Retour vers le futur II est seulement inspiré de lui.",
+    explication: "Zoolander (2001), L'Amour sans préavis (2002) et Wall Street : L'argent ne dort jamais (2010). Par ailleurs, le Biff de Retour vers le futur II est inspiré de lui.",
   }],
   mclain: [{
     type: "qcm", texte: "Dans quel film entend-on aussi la voix de GLaDOS, l'intelligence artificielle du jeu Portal ?",
     choix: ["Pacific Rim", "Interstellar", "Her", "Wall-E"], reponse: 0,
-    explication: "Pacific Rim (2013) : l'actrice Ellen McLain y prête sa voix aux ordinateurs de bord des robots géants. Les joueurs l'ont reconnue dès la première bande-annonce.",
+    explication: "Pacific Rim (2013) : l'actrice Ellen McLain y prête sa voix aux ordinateurs de bord des robots géants. Ça m'a fait de l'effet.",
   }],
   mouthwashing: [{
     type: "qcm", texte: "Quel studio a créé le jeu d'horreur Mouthwashing (2024) ?",
     choix: ["Wrong Organ", "Critical Reflex", "Puppet Combo", "Team Cherry"], reponse: 0,
-    explication: "Wrong Organ. Critical Reflex en est l'éditeur, ce qui explique que son nom apparaisse souvent à côté de celui du jeu.",
+    explication: "Wrong Organ. Critical Reflex en est l'éditeur. La question me servait juste à faire un clin d'œil au jeu.",
   }],
   ecureuil: [{
     type: "qcm", texte: "Squirrel with a Gun (« écureuil avec un flingue »), c'est…",
-    choix: ["Un vrai jeu vidéo", "Un faux jeu inventé pour un mème", "Un court-métrage Pixar", "Une bande dessinée de Pénélope Bagieux"], reponse: 0,
-    explication: "Un vrai jeu vidéo, sorti en 2024 : développé par Dee Dee Creations et édité par Maximum Entertainment, il est sorti sur PC le 29 août 2024. On y incarne, comme promis, un écureuil armé.",
+    choix: ["Un vrai jeu vidéo", "Un morceau de Pharrell Williams", "Un court-métrage DreamWorks", "Une bande dessinée d'Alan Moore"], reponse: 0,
+    explication: "Un vrai jeu vidéo, sorti en 2024 et développé par Dee Dee Creations. Assez horrible en matière de gameplay, mais l'expérience vaut le coup et la promesse est tenue.",
   }],
   justin: [{
     type: "qcm", texte: "De quel site est né Twitch ?",
@@ -179,22 +183,22 @@ export const QUESTIONS = {
     explication: "Justin.tv. Twitch en était la catégorie « jeux vidéo », qui attirait plus de spectateurs que toutes les autres réunies. Elle est devenue un service à part en 2011.",
   }],
   eswc: [{
-    type: "qcm", texte: "En quelle année la Coupe du monde des jeux vidéo (ESWC) a-t-elle lancé un tournoi Counter-Strike 100 % féminin ?", ordre: true,
-    choix: ["2003", "2009", "2015", "2021"], reponse: 0,
+    type: "qcm", texte: "En quelle année la Coupe du monde des jeux vidéo (ESWC) a-t-elle lancé un tournoi Counter-Strike 100 % féminin en France ?", ordre: true,
+    choix: ["2003", "2005", "2007", "2009"], reponse: 0,
     explication: "En 2003, dès la toute première édition de l'ESWC : huit équipes invitées.",
   }, {
-    type: "qcm", texte: "Et où se jouait-il ?",
-    choix: ["Au Futuroscope, près de Poitiers", "À Séoul", "À Las Vegas", "Au Carrousel du Louvre, à Paris"], reponse: 0,
+    type: "qcm", texte: "Et où se jouait le tournoi ?",
+    choix: ["Au Futuroscope, près de Poitiers", "À Bercy", "Aux arènes de Nîmes", "Au Carrousel du Louvre, à Paris"], reponse: 0,
     explication: "Au Futuroscope, près de Poitiers. Le tournoi féminin passera ensuite au Carrousel du Louvre, à Paris, en 2005, avec 24 équipes entièrement féminines.",
   }],
   baseball: [{
     type: "estimer", texte: "Combien de matchs chaque équipe de la MLB joue-t-elle pendant la saison régulière ?",
-    min: 50, max: 250, val: 162, tol: 25, unite: "matchs",
+    min: 50, max: 250, val: 162, tol: 38, unite: "matchs",
     explication: "162, à peu près un par jour pendant six mois. 82, c'est le nombre de matchs d'une saison régulière en NBA ou en NHL.",
   }],
   around: [{
     type: "estimer", texte: "Combien de fois la phrase « Around the world » est-elle répétée dans le morceau de Daft Punk ?",
-    min: 0, max: 300, val: 144, tol: 35, unite: "fois",
+    min: 0, max: 300, val: 144, tol: 45, unite: "fois",
     explication: "144 fois, selon le décompte le plus souvent cité pour la version de l'album Homework (1997). Ce sont les seules paroles du morceau.",
   }],
   bestof: [{
@@ -208,13 +212,13 @@ export const QUESTIONS = {
     explication: "Son biographe, David Ritz. Il travaillait avec Gaye sur sa biographie quand il lui a suggéré l'expression « sexual healing ». Il n'a obtenu son crédit qu'après un procès réglé avec la succession du chanteur.",
   }],
   zoubida: [{
-    type: "qcm", texte: "Combien de semaines La Zoubida, de Lagaf', est-elle restée numéro 1 des ventes en France ?", ordre: true,
+    type: "qcm", texte: "Combien de semaines La Zoubida de Vincent Lagaf' est-elle restée numéro 1 des ventes en France ?", ordre: true,
     choix: ["1", "4", "11", "25"], reponse: 2,
-    explication: "11 semaines, non consécutives, en 1991. La chanson a aussi été certifiée disque de platine.",
+    explication: "11 semaines, non consécutives, en 1991. La chanson a hélas aussi été certifiée disque de platine.",
   }],
   grenoble: [{
     type: "qcm", texte: "Qu'ont en commun le chanteur Michel Fugain et le vidéaste Mister V ?",
-    choix: ["Ils sont nés à Grenoble", "Ils sont cousins", "Ils sont demi-frères", "Ils sont nés à Marseille"], reponse: 0,
+    choix: ["Leur ville de naissance", "Ils sont cousins germains", "Leur date d'anniversaire", "Leur année de naissance"], reponse: 0,
     explication: "Ils sont nés à Grenoble, à deux générations d'écart : Mister V, de son vrai nom Yvick Letexier, y est né le 14 août 1993.",
   }],
   glabre: [{
@@ -224,7 +228,7 @@ export const QUESTIONS = {
   }],
   laudatif: [{
     type: "qcm", texte: "Un discours « laudatif »…",
-    choix: ["fait l'éloge de quelqu'un", "se moque de quelqu'un", "dure très longtemps", "n'a aucun sens"], reponse: 0,
+    choix: ["fait l'éloge de quelqu'un", "est très condescendant", "dure très longtemps", "n'a aucun sens"], reponse: 0,
     explication: "Il fait l'éloge de quelqu'un. Laudatif signifie « qui contient un éloge, qui loue ». Le mot vient du latin laudare, « louer ».",
   }],
   berezina: [{
@@ -270,6 +274,7 @@ export const QUESTIONS = {
     type: "qcm", texte: "La plus célèbre photo de Nessie, publiée en 1934, montrait en réalité…",
     choix: ["Un sous-marin jouet avec une tête sculptée", "Un tronc d'arbre à la dérive", "Un éléphant de cirque en train de nager", "Une loutre photographiée de très près"], reponse: 0,
     explication: "Un sous-marin jouet surmonté d'un cou et d'une tête de serpent de mer. Christian Spurling, qui avait fabriqué la maquette, l'a avoué en 1994, soixante ans plus tard.",
+      voir: { texte: "Voir la photo de 1934", url: "https://hoaxes.org/photo_database/image/the_surgeons_photo/" },
   }],
   ankylosaure: [{
     type: "qcm", texte: "Au bout de sa queue, l'ankylosaure avait…",
@@ -278,18 +283,18 @@ export const QUESTIONS = {
   }],
   cadratin: [{
     type: "qcm", texte: "Le « cadratin », qui donne son nom au tiret long (—) et au demi-cadratin (–), vient d'un mot latin qui veut dire…",
-    choix: ["« Carré »", "« Trait »", "« Plume »", "« Page »"], reponse: 0,
+    choix: ["« Carré »", "« Trait »", "« Ligne »", "« Page »"], reponse: 0,
     explication: "« Carré » (quadratus) : le cadratin est un carré aussi large que la police est haute. Le tiret demi-cadratin en fait la moitié.",
   }],
   simpsonwave: [{
-    type: "qcm", texte: "La « simpsonwave », apparue sur YouTube en 2016, c'est…",
-    choix: ["Des extraits des Simpson montés sur de la musique vaporwave", "Une coiffure inspirée de celle de Marge", "Une danse tirée d'un épisode culte", "Les mèmes sur les « prédictions » des Simpson"], reponse: 0,
+    type: "qcm", texte: "La « simpsonwave », c'est…",
+    choix: ["Des extraits des Simpson montés sur de la musique", "Une coiffure inspirée de la série", "Une danse tirée d'un épisode culte", "Des vidéos glauques autour des Simpson"], reponse: 0,
     explication: "Des scènes des Simpson filtrées façon vieille VHS, sur de la vaporwave. Le genre a été lancé en février 2016 par Lucien Hughes, un étudiant de Nottingham.",
   }],
   lej: [{
     type: "taper", texte: "Après la victoire des Bleus au Mondial 2018, le trio L.E.J sort un hymne : « Liberté, Égalité… » ?",
     accepte: ["Mbappé"],
-    explication: "Mbappé ! Le clip « Liberté, Égalité, Mbappé » sort fin juillet 2018, pour le meilleur jeune joueur du Mondial, 19 ans à l'époque.",
+    explication: "Mbappé ! Le clip « Liberté, Égalité, Mbappé » sort fin juillet 2018. Je ne mettrai pas le clip. Faites vos recherches.",
   }],
 };
 

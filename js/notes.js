@@ -17,6 +17,7 @@ const S = {
   britCachalot: { nom: "Encyclopædia Britannica", titre: "How Did the Sperm Whale Get Its Name?", url: "https://www.britannica.com/story/how-did-the-sperm-whale-get-its-name" },
   ncbiOs: { nom: "NCBI Bookshelf (StatPearls)", titre: "Anatomy, Head and Neck, Ear Ossicles", url: "https://www.ncbi.nlm.nih.gov/books/NBK570549/" },
   blHubert: { nom: "British Library", titre: "Robert Hubert and the Great Fire of London", url: "https://www.bl.uk/stories/blogs/posts/robert-hubert-and-the-great-fire-of-london" },
+  wikiGrandIncendie: { nom: "Wikipédia (en)", titre: "Great Fire of London", url: "https://en.wikipedia.org/wiki/Great_Fire_of_London" },
   wikiFarriner: { nom: "Wikipédia (en)", titre: "Thomas Farriner", url: "https://en.wikipedia.org/wiki/Thomas_Farriner" },
   britMelos: { nom: "Encyclopædia Britannica", titre: "Melian Dialogue", url: "https://www.britannica.com/topic/Melian-Dialogue" },
   thucydide: { nom: "Thucydide", titre: "La Guerre du Péloponnèse, livre V, chapitres 84 à 116" },
@@ -193,7 +194,7 @@ export const SALLES_NOTES = [
     ],
     saviezVous: "Un horloger français, Robert Hubert, avoue avoir allumé l'incendie. Farriner et ses enfants signent l'acte d'accusation, et Hubert est pendu le 27 octobre 1666. Pourtant, le capitaine de son navire témoigne qu'il n'est arrivé en Angleterre que deux jours après le début du feu. Farriner meurt en 1670.",
     note: "Le rôle de Farriner dans l'accusation repose sur une transcription d'archives de la City de Londres, citée par la page Wikipédia qui lui est consacrée.",
-    sources: [S.blHubert, S.wikiFarriner],
+    sources: [S.blHubert, S.wikiFarriner, S.wikiGrandIncendie],
     liens: [],
   },
   {
