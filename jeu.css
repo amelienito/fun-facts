@@ -191,6 +191,26 @@ html[data-typo="instrument"] .verdict b { font-size: 2.2rem; }
 .porte.pepite .p-type::before { content: "★ "; }
 .porte[disabled] { cursor: default; opacity: 0.35; transform: none; background: none; }
 .porte.choisie { opacity: 1; }
+/* la suite de la partie : bien visible, pour qu'on comprenne qu'il y a une autre question */
+.suite-partie { margin-top: 46px; padding-top: 26px; border-top: 2px dashed currentColor; }
+.suite-titre { display: flex; align-items: center; gap: 12px; margin: 0 0 4px !important; font: 800 clamp(1.5rem, 3.2vw, 2.1rem)/1.1 var(--titre, inherit) !important; }
+.suite-titre i { font-style: normal; display: inline-block; animation: suite-fleche 1.4s ease-in-out infinite; }
+@keyframes suite-fleche { 0%, 100% { transform: translateY(-2px); } 50% { transform: translateY(5px); } }
+.suite-partie .porte { background: rgba(255, 255, 255, 0.14); box-shadow: inset 0 0 0 2px rgba(0, 0, 0, 0.55); cursor: pointer; }
+.bande.clair .suite-partie .porte { background: rgba(255, 255, 255, 0.06); box-shadow: inset 0 0 0 2px rgba(255, 255, 255, 0.4); }
+.suite-partie .porte::after { content: "Y aller →"; margin-top: 4px; padding: 5px 12px; border-radius: 999px; background: #15131a; color: #fbf5e9; font-weight: 800; font-size: 0.85rem; transition: transform 0.2s; }
+.bande.clair .suite-partie .porte::after { background: #fbf5e9; color: #15131a; }
+.suite-partie .porte:hover::after { transform: translateX(3px); }
+.suite-partie .porte[disabled]::after { visibility: hidden; }
+.suite-partie.vue .porte { animation: porte-arrive 0.6s cubic-bezier(0.3, 1.6, 0.5, 1) both; }
+.suite-partie.vue .porte:nth-child(2) { animation-delay: 0.12s; }
+@keyframes porte-arrive { from { transform: translateY(18px) scale(0.94); opacity: 0; } to { transform: none; opacity: 1; } }
+.bouton-suite { position: fixed; z-index: 40; left: 50%; bottom: max(18px, calc(env(safe-area-inset-bottom) + 10px)); transform: translateX(-50%); display: flex; align-items: center; gap: 10px;
+  padding: 13px 20px; border-radius: 999px; background: #15131a; color: #fbf5e9; font-weight: 800; font-size: 1rem; white-space: nowrap; box-shadow: 0 10px 30px -8px rgba(0, 0, 0, 0.55); animation: suite-monte 0.4s cubic-bezier(0.3, 1.5, 0.5, 1); }
+.bouton-suite i { font-style: normal; display: inline-block; animation: suite-fleche 1.4s ease-in-out infinite; }
+.bouton-suite[hidden] { display: none; }
+@keyframes suite-monte { from { transform: translate(-50%, 20px); opacity: 0; } }
+@media (prefers-reduced-motion: reduce) { .suite-titre i, .bouton-suite i, .suite-partie.vue .porte, .bouton-suite { animation: none; } }
 .lien-texte { font-weight: 700; text-decoration: underline; text-underline-offset: 4px; text-decoration-thickness: 2px; }
 
 /* ---------- Archives ---------- */
@@ -622,3 +642,9 @@ dialog.objet-dlg { background: radial-gradient(ellipse at 50% 40%, #fff6e0, #f1e
 .bulle-navig button { font-size: 1rem; font-weight: 800; padding: 0 2px; color: inherit; }
 .bn-fleche { font-size: 1.7rem; font-weight: 900; line-height: 1; animation: bn-pointe 0.8s ease-in-out infinite alternate; }
 @keyframes bn-pointe { to { transform: translate(4px, -5px); } }
+
+/* le retour aux créations d'Amélien (le hub), toujours là en haut à gauche */
+.retour-hub { display: inline-flex; align-items: center; gap: 2px; margin-right: 10px; padding: 6px 10px; border-radius: 999px; background: rgba(251, 245, 233, 0.1); color: inherit; font-weight: 800; font-size: 0.85rem; line-height: 1; text-decoration: none; letter-spacing: 0.02em; transition: background 0.2s; }
+.retour-hub:hover { background: rgba(251, 245, 233, 0.2); }
+.retour-hub + .marque { margin-right: auto; }
+@media (max-width: 480px) { .retour-hub span { display: none; } .retour-hub { padding: 6px 9px; margin-right: 6px; } }

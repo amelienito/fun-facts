@@ -724,9 +724,42 @@ function blocPortes(s, bande) {
     zone.append(b);
     return b;
   });
-  return h("div", { class: "pistes-zone" },
-    h("p", null, "Et maintenant ?"),
+  // Bien montrer que la partie continue : « Question 2 sur 7 », des portes en relief, et un bouton qui y mène tant qu'elles sont hors de l'écran
+  const prochaine = partie ? `Prochaine question · ${Math.min(partie.n + 1, partie.total)}/${partie.total}` : "Prochaine question";
+  const bloc = h("div", { class: "pistes-zone suite-partie" },
+    h("p", { class: "suite-titre" }, h("span", null, prochaine), h("i", { "aria-hidden": "true" }, "↓")),
+    h("p", { class: "aide" }, "Choisis ton prochain thème."),
     zone);
+  montrerSuite(bloc);
+  return bloc;
+}
+
+// le bouton « Question suivante ↓ », en bas de l'écran, tant que les portes ne sont pas visibles ; et une petite descente automatique
+let boutonSuite = null, guetteur = null;
+function montrerSuite(bloc) {
+  if (!boutonSuite) {
+    boutonSuite = h("button", { class: "bouton-suite", type: "button", hidden: true }, h("span", null, "Prochaine question"), h("i", { "aria-hidden": "true" }, "↓"));
+    boutonSuite.addEventListener("click", () => { if (boutonSuite.cible) boutonSuite.cible.scrollIntoView({ behavior: reduit() ? "auto" : "smooth", block: "center" }); });
+    document.body.append(boutonSuite);
+  }
+  boutonSuite.querySelector("span").textContent = partie ? `Prochaine question · ${Math.min(partie.n + 1, partie.total)}/${partie.total}` : "Prochaine question";
+  boutonSuite.cible = bloc;
+  if (guetteur) guetteur.disconnect();
+  guetteur = new IntersectionObserver(([e]) => {
+    const choisi = !!bloc.querySelector(".porte.choisie");
+    boutonSuite.hidden = e.isIntersecting || choisi || !bloc.isConnected;
+    if (e.isIntersecting) bloc.classList.add("vue");
+  }, { threshold: 0.35 });
+  requestAnimationFrame(() => {
+    guetteur.observe(bloc);
+    // une fois la réponse lue (un peu plus d'une seconde), on descend juste ce qu'il faut pour voir les portes
+    setTimeout(() => {
+      if (!bloc.isConnected || bloc.querySelector(".porte.choisie")) return;
+      const r = bloc.getBoundingClientRect();
+      if (r.top > innerHeight - 140) scrollBy({ top: Math.min(r.top - innerHeight + Math.min(r.height, innerHeight * 0.6) + 24, r.top - 90), behavior: reduit() ? "auto" : "smooth" });
+    }, 1300);
+  });
+  bloc.addEventListener("click", (e) => { if (e.target.closest(".porte")) { boutonSuite.hidden = true; if (guetteur) guetteur.disconnect(); } });
 }
 
 function suivant(id) {
