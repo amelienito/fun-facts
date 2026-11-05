@@ -435,7 +435,7 @@ export const SALLES_NOTES = [
 
   /* ---------- Musique ---------- */
   {
-    id: "around", cat: "musique", objet: "vinyle:bleu", nom: "Vinyle de Homework",
+    id: "around", cat: "musique", objet: "cd:bleu", nom: "CD de Homework",
     porte: "Une chanson de trois mots",
     questions: [
       {
@@ -449,7 +449,7 @@ export const SALLES_NOTES = [
     liens: [{ vers: "bestof", porte: "Un autre disque, un autre duo" }],
   },
   {
-    id: "bestof", cat: "musique", objet: "vinyle:or", nom: "Vinyle à deux voix",
+    id: "bestof", cat: "musique", objet: "cd:or", nom: "CD à deux voix",
     porte: "Un duo qui a mal vieilli",
     questions: [
       {
@@ -463,7 +463,7 @@ export const SALLES_NOTES = [
   },
 
   {
-    id: "ritz", cat: "musique", objet: "vinyle:rouge", nom: "Vinyle de Midnight Love",
+    id: "ritz", cat: "musique", objet: "cd:rouge", nom: "CD de Midnight Love",
     porte: "Un biographe qui a fini dans les crédits",
     questions: [
       {
@@ -477,7 +477,7 @@ export const SALLES_NOTES = [
     liens: [{ vers: "bestof", porte: "Un autre duo, beaucoup moins tendre" }],
   },
   {
-    id: "zoubida", cat: "musique", objet: "vinyle:rose", nom: "45 tours de 1991",
+    id: "zoubida", cat: "musique", objet: "cd:rose", nom: "CD single de 1991",
     porte: "Le tube de l'été 1991",
     questions: [
       {
@@ -490,7 +490,7 @@ export const SALLES_NOTES = [
   },
 
   {
-    id: "grenoble", cat: "musique", objet: "vinyle:vert", nom: "Disque grenoblois",
+    id: "grenoble", cat: "musique", objet: "cd:vert", nom: "CD grenoblois",
     porte: "Deux artistes, une même ville",
     questions: [],
     sources: [S.wikiFugain, S.wikiMisterV],
@@ -635,7 +635,7 @@ export const SALLES_NOTES = [
     liens: [{ vers: "manicule", porte: "Un autre signe d'imprimeur" }],
   },
   {
-    id: "simpsonwave", cat: "musique", objet: "vinyle:vapor", nom: "Vinyle rose néon",
+    id: "simpsonwave", cat: "musique", objet: "cd:vapor", nom: "CD rose néon",
     porte: "Une série culte, un son rétro",
     questions: [],
     sources: [S.leftlionSimpson],

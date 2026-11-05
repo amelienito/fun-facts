@@ -28,7 +28,7 @@ export const QUESTIONS = {
     {
       type: "qcm", texte: "Et que fabriquait Nintendo à ses débuts ?",
       choix: ["Des cartes à jouer", "Des jouets en bois", "Des horloges", "Des cerfs-volants"], reponse: 0,
-      explication: "Des hanafuda, des cartes à jouer japonaises, que Fusajiro Yamauchi fabrique et vend dès 1889.",
+      explication: "Des hanafuda, des cartes à jouer japonaises, que Fusajiro Yamauchi fabrique et vend.",
       voir: { texte: "Voir des hanafuda Nintendo", url: "https://www.wopc.co.uk/japan/flower-cards" },
     },
   ],
@@ -98,7 +98,7 @@ export const QUESTIONS = {
   fifa: [{
     type: "qcm", texte: "Dans quelle ville la FIFA a-t-elle été fondée, en 1904 ?",
     choix: ["Paris", "Londres", "Genève", "Bruxelles"], reponse: 0,
-    explication: "À Paris, le 21 mai 1904, au 229 rue Saint-Honoré. La France, la Belgique, le Danemark, les Pays-Bas et la Suisse étaient présents ; l'Angleterre ne l'a rejointe qu'en 1905.",
+    explication: "À Paris, le 21 mai 1904, au 229 rue Saint-Honoré. La France, la Belgique, le Danemark, les Pays-Bas et la Suisse étaient présents.",
   }],
   statue: [{
     type: "qcm", texte: "Quelle est la plus grande statue du monde ?",
@@ -126,7 +126,7 @@ export const QUESTIONS = {
   beksinski: [{
     type: "qcm", texte: "Quel titre Zdzisław Beksiński donnait-il à ses tableaux ?",
     choix: ["Aucun", "Un prénom", "Un mot inventé", "Un lieu"], reponse: 0,
-    explication: "Aucun : Zdzisław Beksiński ne nommait ni ses dessins ni ses tableaux, car ses œuvres n'avaient pas à être expliquées. Il disait ne pas savoir lui-même ce qu'elles signifiaient.",
+    explication: "Aucun : Zdzisław Beksiński ne nommait ni ses dessins ni ses tableaux, car ses œuvres n'avaient pas à être expliquées.",
   }, {
     type: "qcm", texte: "Et comment s'écrit le nom de ce peintre polonais, déjà ?", relire: false,
     choix: ["Zdzisław Beksiński", "Zdzislaw Bekszinski", "Zdzisłav Beksinsky", "Zdźisław Bekśinski"], reponse: 0,
@@ -326,7 +326,7 @@ export const NIVEAUX = [
 ];
 
 // Faits dont l'objet ou la série trahirait la réponse : affichés en « ? » jusqu'à la révélation.
-export const MYSTERES = new Set(["ecureuil", "hiboux"]);
+export const MYSTERES = new Set(["ecureuil", "hiboux", "farriner", "nintendo", "dragonnier", "requins", "tumbler", "charolais", "nessie"]);
 
 // Frises : les questions à deux choix évidents se jouent sur une ligne du temps.
 // Les choix restent dans l'ordre (gauche, droite). « cache » : le point apparaît après la réponse.

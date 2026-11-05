@@ -668,6 +668,48 @@ function vinyle(variante) {
   return g;
 }
 
+// la face gravée d'un CD : l'argent, deux éventails arc-en-ciel, le moyeu transparent
+function texCD() {
+  const c = document.createElement("canvas");
+  c.width = c.height = 256;
+  const x = c.getContext("2d"), r = 128;
+  const base = x.createRadialGradient(r, r, 20, r, r, r);
+  base.addColorStop(0, "#e6e9ee"); base.addColorStop(1, "#9aa2ae");
+  x.fillStyle = base; x.beginPath(); x.arc(r, r, r, 0, 7); x.fill();
+  if (x.createConicGradient) for (const a0 of [0.4, 0.4 + PI]) {
+    const f = 1.1 / (PI * 2), arc = x.createConicGradient(a0, r, r);
+    ["rgba(255,70,90,0)", "rgba(255,70,90,.75)", "rgba(255,200,60,.75)", "rgba(90,230,120,.75)", "rgba(60,200,255,.75)", "rgba(150,90,255,0)"].forEach((k, i, l) => arc.addColorStop(f * i / (l.length - 1), k));
+    arc.addColorStop(f + 0.001, "rgba(0,0,0,0)"); arc.addColorStop(1, "rgba(0,0,0,0)");
+    x.fillStyle = arc; x.beginPath(); x.arc(r, r, r, 0, 7); x.arc(r, r, 42, 0, 7, true); x.fill();
+  }
+  x.fillStyle = "#d8dce1"; x.beginPath(); x.arc(r, r, 40, 0, 7); x.fill();
+  x.fillStyle = "#3a3532"; x.beginPath(); x.arc(r, r, 11, 0, 7); x.fill();
+  const t = new THREE.CanvasTexture(c);
+  t.colorSpace = THREE.SRGBColorSpace;
+  return t;
+}
+
+// un boîtier de CD debout (le livret de couleur, le couvercle transparent, la charnière), le CD à moitié sorti
+function cd(variante) {
+  const couleurs = { bleu: 0x2c5f9e, or: 0xc9952f, rouge: 0xb3262e, rose: 0xe58fb0, vert: 0x3f8a5a, vapor: 0xff71ce };
+  const g = new THREE.Group();
+  const disque = m(new THREE.CylinderGeometry(0.42, 0.42, 0.014, 40), new THREE.MeshPhongMaterial({ map: texCD(), shininess: 110, specular: 0x999999 }), 0.34, 0.56, -0.09);
+  disque.rotation.x = PI / 2;
+  disque.rotation.z = 0.15;
+  g.add(disque);
+  const boitier = new THREE.Group();
+  boitier.add(m(new THREE.BoxGeometry(1.0, 0.88, 0.05), mat(0x16161a, { shininess: 60 }), 0, 0, -0.03));
+  boitier.add(m(new THREE.BoxGeometry(0.86, 0.84, 0.012), mat(couleurs[variante] || 0x2c5f9e), 0.06, 0, 0.0));
+  boitier.add(m(new THREE.BoxGeometry(0.08, 0.88, 0.075), mat(0x2b2b31, { shininess: 80, specular: 0x666666 }), -0.46, 0, -0.01));
+  boitier.add(m(new THREE.BoxGeometry(1.0, 0.88, 0.012), verre({ opacity: 0.22 }), 0, 0, 0.018));
+  boitier.position.set(-0.12, 0.52, -0.02);
+  boitier.rotation.x = -0.07;
+  boitier.rotation.z = 0.03;
+  g.add(boitier);
+  g.add(m(new THREE.BoxGeometry(1.2, 0.08, 0.34), mat(0x5a321e), 0, 0.04, -0.02));
+  return g;
+}
+
 function texTableau(variante) {
   const c = document.createElement("canvas");
   c.width = 320;
@@ -917,7 +959,7 @@ function ankylosaure() {
 const FABRIQUES = {
   cerveau, pyramide, dent, hanafuda, eiffel, drap, caisse,
   nid, hibou, ours, arbre, cachalot, os, pain, colonne, boulefeu, boite, chrono,
-  ballon, balle, bobine, vhs, micro, manette, souris, vinyle, tableau, statue, livre, fromage, casque, bouclier, nessie, ankylosaure,
+  ballon, balle, bobine, vhs, micro, manette, souris, vinyle, cd, tableau, statue, livre, fromage, casque, bouclier, nessie, ankylosaure,
 };
 
 export function construire(id) {
