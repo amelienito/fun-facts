@@ -288,7 +288,7 @@ export const QUESTIONS = {
   }],
   simpsonwave: [{
     type: "qcm", texte: "La « simpsonwave », c'est…",
-    choix: ["Des extraits des Simpson montés sur de la musique", "Une coiffure inspirée de la série", "Une danse tirée d'un épisode culte", "Des vidéos glauques autour des Simpson"], reponse: 0,
+    choix: ["Des extraits des Simpson montés sur de la musique", "Une coiffure inspirée de la série", "Une danse tirée d'un épisode culte", "Des vidéos horrifiques autour des Simpson"], reponse: 0,
     explication: "Des scènes des Simpson filtrées façon vieille VHS, sur de la vaporwave. Le genre a été lancé en février 2016 par Lucien Hughes, un étudiant de Nottingham.",
   }],
   lej: [{
