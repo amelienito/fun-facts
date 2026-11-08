@@ -92,13 +92,21 @@ async ({skill, ctl}) => {
 async def jouer_partie(pg, skill, longueur, log):
     # lancer
     if await pg.query_selector(".bande:last-child .durees"):
+        if not await pg.query_selector(f".bande:last-child .duree[data-n='{longueur}']"):
+            longueur = int(await pg.eval_on_selector(".bande:last-child .duree:last-child", "b => b.dataset.n"))
         await pg.click(f".bande:last-child .duree[data-n='{longueur}']")
         await pg.click(".bande:last-child .jouer")
         await pg.wait_for_timeout(60)
     ev = []; stuck = 0; steps = 0; t_inter = 0
     while steps < 700:
         steps += 1
-        r = await pg.evaluate(STEP_JS, {"skill": skill, "ctl": 0})
+        # Chrome jette parfois la promesse de l'import dynamique (« Promise was collected ») : on réessaie
+        for essai in range(4):
+            try:
+                r = await pg.evaluate(STEP_JS, {"skill": skill, "ctl": 0}); break
+            except Exception as e:
+                if "Execution context was destroyed" not in str(e) or essai == 3: raise
+                await pg.wait_for_timeout(200)
         k = r.get("k")
         if k == "placer":
             await pg.mouse.click(r["x"], r["y"]); await pg.wait_for_timeout(15)

@@ -212,6 +212,17 @@ html[data-typo="instrument"] .verdict b { font-size: 2.2rem; }
 .bouton-suite i { font-style: normal; display: inline-block; animation: suite-fleche 1.4s ease-in-out infinite; }
 .bouton-suite[hidden] { display: none; }
 @keyframes suite-monte { from { transform: translate(-50%, 20px); opacity: 0; } }
+/* la flèche bouge trois fois puis se pose ; à partir de la 3e question, plus calme encore */
+.suite-titre i, .bouton-suite i { animation-iteration-count: 3; }
+.suite-partie.habitue { margin-top: 34px; padding-top: 20px; }
+.suite-partie.habitue .suite-titre { font-size: clamp(1.2rem, 2.4vw, 1.6rem) !important; }
+.suite-partie.habitue .suite-titre i, .bouton-suite.habitue i { animation: none; }
+.suite-partie.habitue > .aide { display: none; }
+.suite-partie.habitue.vue .porte { animation-duration: 0.35s; animation-timing-function: ease-out; }
+.bouton-suite.habitue { padding: 10px 16px; font-size: 0.9rem; background: rgba(21, 19, 26, 0.88); }
+/* les petits messages se rangent au-dessus du bouton au lieu de passer dessous */
+.toasts { transition: bottom 0.25s ease; }
+body.avec-suite .toasts { bottom: calc(max(18px, calc(env(safe-area-inset-bottom) + 10px)) + 64px); }
 @media (prefers-reduced-motion: reduce) { .suite-titre i, .bouton-suite i, .suite-partie.vue .porte, .bouton-suite { animation: none; } }
 .lien-texte { font-weight: 700; text-decoration: underline; text-underline-offset: 4px; text-decoration-thickness: 2px; }
 
@@ -513,6 +524,15 @@ dialog.objet-dlg { background: radial-gradient(ellipse at 50% 40%, #fff6e0, #f1e
 .banniere span { font-family: "Press Start 2P", monospace; font-size: clamp(0.6rem, 2.8vw, 0.95rem); line-height: 1.6; text-transform: uppercase; color: #FFE14D; background: #15131A; padding: 8px 12px; border-radius: 4px; justify-self: center; }
 @keyframes pop-jv { 0% { transform: skewX(-10deg) rotate(-4deg) scale(0.2); } 18% { transform: skewX(-10deg) rotate(-4deg) scale(1.15); } 30%, 100% { transform: skewX(-10deg) rotate(-4deg) scale(1); } }
 @keyframes banniere { 0%, 78% { opacity: 1; } 84% { opacity: 0; } 90% { opacity: 1; } 100% { opacity: 0; } }
+/* accents dessinés en pixels (1 pixel de la police = 0,125em) */
+.banniere span .pix { font-style: normal; position: relative; display: inline-block; }
+.banniere span .pix::before, .banniere span .pix::after { content: ""; position: absolute; width: 0.25em; height: 0.125em; background: currentColor; }
+.banniere span .pix.aigu::before { left: 0.375em; top: 0.125em; }
+.banniere span .pix.aigu::after { left: 0.5em; top: 0; }
+.banniere span .pix.grave::before { left: 0.25em; top: 0; }
+.banniere span .pix.grave::after { left: 0.375em; top: 0.125em; }
+.banniere span .pix.circ::before { left: 0.25em; top: 0.125em; box-shadow: 0.25em 0 currentColor; width: 0.125em; }
+.banniere span .pix.circ::after { left: 0.375em; top: 0; width: 0.125em; }
 @media (prefers-reduced-motion: reduce) { .banniere { display: none; } }
 @media (max-width: 560px) {
   .paires { grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr); gap: 8px; }

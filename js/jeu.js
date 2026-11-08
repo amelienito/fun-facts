@@ -250,8 +250,14 @@ function gagner(points, x, y) {
   }
 }
 
+// Une seule chose à la fois : une annonce attend que la bannière ait fini, et qu'une annonce déjà ouverte soit fermée.
+const fileAnnonces = [];
+let banniereFin = 0;
 function annoncer(sur, titre, texte) {
   const a = $("annonce");
+  const reste = banniereFin - performance.now();
+  if (reste > 0) { setTimeout(() => annoncer(sur, titre, texte), reste + 120); return; }
+  if (!a.hidden) { fileAnnonces.push([sur, titre, texte]); return; }
   const btn = h("button", { class: "gros-bouton", type: "button", onclick: () => (a.hidden = true) }, "Continuer");
   vider(a, h("div", { class: "carte", role: "dialog", "aria-modal": "true", "aria-label": titre }, h("small", null, sur), h("h2", null, titre), h("p", null, texte), btn));
   a.hidden = false;
@@ -259,6 +265,10 @@ function annoncer(sur, titre, texte) {
 }
 $("annonce").addEventListener("click", (e) => { if (e.target.id === "annonce") e.currentTarget.hidden = true; });
 addEventListener("keydown", (e) => { if (e.key === "Escape") $("annonce").hidden = true; });
+new MutationObserver(() => {
+  if ($("annonce").hidden && fileAnnonces.length) setTimeout(() => annoncer(...fileAnnonces.shift()), 250);
+  majBoutonSuite();
+}).observe($("annonce"), { attributes: true, attributeFilter: ["hidden"] });
 
 function toast(...contenu) {
   const t = h("div", { class: "toast" }, contenu);
@@ -727,7 +737,8 @@ function blocPortes(s, bande) {
   });
   // Bien montrer que la partie continue : « Question 2 sur 7 », des portes en relief, et un bouton qui y mène tant qu'elles sont hors de l'écran
   const prochaine = partie ? `Prochaine question · ${Math.min(partie.n + 1, partie.total)}/${partie.total}` : "Prochaine question";
-  const bloc = h("div", { class: "pistes-zone suite-partie" },
+  // Les deux premières fois, on insiste (flèches qui bougent) ; ensuite on a compris : plus calme.
+  const bloc = h("div", { class: `pistes-zone suite-partie ${suitesMontrees >= 2 ? "habitue" : ""}` },
     h("p", { class: "suite-titre" }, h("span", null, prochaine), h("i", { "aria-hidden": "true" }, "↓")),
     h("p", { class: "aide" }, "Choisis ton prochain thème."),
     zone);
@@ -736,31 +747,49 @@ function blocPortes(s, bande) {
 }
 
 // le bouton « Question suivante ↓ », en bas de l'écran, tant que les portes ne sont pas visibles ; et une petite descente automatique
-let boutonSuite = null, guetteur = null;
+// Le bouton n'arrive qu'après la petite descente, et jamais par-dessus une annonce ou une bannière ; les petits messages montent au-dessus de lui.
+let boutonSuite = null, guetteur = null, suitesMontrees = 0;
+const suiteEtat = { pret: false, visible: true, bloc: null };
+function majBoutonSuite() {
+  if (!boutonSuite) return;
+  const bloc = suiteEtat.bloc;
+  const cache = !bloc || !bloc.isConnected || !suiteEtat.pret || suiteEtat.visible || !!bloc.querySelector(".porte.choisie")
+    || !$("annonce").hidden || banniereFin > performance.now();
+  boutonSuite.hidden = cache;
+  document.body.classList.toggle("avec-suite", !cache);
+}
 function montrerSuite(bloc) {
   if (!boutonSuite) {
     boutonSuite = h("button", { class: "bouton-suite", type: "button", hidden: true }, h("span", null, "Prochaine question"), h("i", { "aria-hidden": "true" }, "↓"));
-    boutonSuite.addEventListener("click", () => { if (boutonSuite.cible) boutonSuite.cible.scrollIntoView({ behavior: reduit() ? "auto" : "smooth", block: "center" }); });
+    boutonSuite.addEventListener("click", () => { if (suiteEtat.bloc) suiteEtat.bloc.scrollIntoView({ behavior: reduit() ? "auto" : "smooth", block: "center" }); });
     document.body.append(boutonSuite);
   }
   boutonSuite.querySelector("span").textContent = partie ? `Prochaine question · ${Math.min(partie.n + 1, partie.total)}/${partie.total}` : "Prochaine question";
-  boutonSuite.cible = bloc;
+  boutonSuite.classList.toggle("habitue", suitesMontrees >= 2);
+  suitesMontrees++;
+  Object.assign(suiteEtat, { pret: false, visible: false, bloc });
+  majBoutonSuite();
   if (guetteur) guetteur.disconnect();
   guetteur = new IntersectionObserver(([e]) => {
-    const choisi = !!bloc.querySelector(".porte.choisie");
-    boutonSuite.hidden = e.isIntersecting || choisi || !bloc.isConnected;
+    suiteEtat.visible = e.isIntersecting;
     if (e.isIntersecting) bloc.classList.add("vue");
+    majBoutonSuite();
   }, { threshold: 0.35 });
   requestAnimationFrame(() => {
     guetteur.observe(bloc);
-    // une fois la réponse lue (un peu plus d'une seconde), on descend juste ce qu'il faut pour voir les portes
-    setTimeout(() => {
-      if (!bloc.isConnected || bloc.querySelector(".porte.choisie")) return;
+    // une fois la réponse lue (un peu plus d'une seconde), on descend juste ce qu'il faut pour voir les portes ;
+    // si une annonce est ouverte, on attend qu'elle soit fermée
+    const descendre = () => {
+      if (!bloc.isConnected || bloc.querySelector(".porte.choisie") || suiteEtat.bloc !== bloc) return;
+      if (!$("annonce").hidden || banniereFin > performance.now()) { setTimeout(descendre, 400); return; }
       const r = bloc.getBoundingClientRect();
       if (r.top > innerHeight - 140) scrollBy({ top: Math.min(r.top - innerHeight + Math.min(r.height, innerHeight * 0.6) + 24, r.top - 90), behavior: reduit() ? "auto" : "smooth" });
-    }, 1300);
+      // le bouton ne sert plus que si on remonte relire : il n'arrive qu'après la descente
+      setTimeout(() => { if (suiteEtat.bloc === bloc) { suiteEtat.pret = true; majBoutonSuite(); } }, 900);
+    };
+    setTimeout(descendre, 1300);
   });
-  bloc.addEventListener("click", (e) => { if (e.target.closest(".porte")) { boutonSuite.hidden = true; if (guetteur) guetteur.disconnect(); } });
+  bloc.addEventListener("click", (e) => { if (e.target.closest(".porte")) { suiteEtat.bloc = null; majBoutonSuite(); if (guetteur) guetteur.disconnect(); } });
 }
 
 function suivant(id) {
@@ -1112,10 +1141,19 @@ function canonConfettis(intensite) {
 }
 
 // Un énorme texte qui traverse l'écran.
+// La police pixel écrase ses capitales accentuées (on lit « RéPONSES ») :
+// on écrit un vrai E et on dessine l'accent au-dessus, en pixels.
+function enPixels(texte) {
+  return texte.toLocaleUpperCase("fr").split(/([ÉÈÊÀ])/).filter(Boolean).map((m) => {
+    const acc = { "É": "aigu", "È": "grave", "Ê": "circ", "À": "grave" }[m];
+    return acc ? h("i", { class: `pix ${acc}` }, m === "À" ? "A" : "E") : m;
+  });
+}
 function banniere(texte, sous = "", duree = 1100) {
-  const el = h("div", { class: "banniere", "aria-hidden": "true", style: `animation-duration:${duree}ms` }, h("b", null, texte), sous ? h("span", null, sous) : null);
+  const el = h("div", { class: "banniere", "aria-hidden": "true", style: `animation-duration:${duree}ms` }, h("b", null, texte), sous ? h("span", null, enPixels(sous)) : null);
   document.body.append(el);
-  setTimeout(() => el.remove(), duree);
+  banniereFin = Math.max(banniereFin, performance.now() + duree);
+  setTimeout(() => { el.remove(); majBoutonSuite(); }, duree);
 }
 
 function celebrer(ratio, record) {
