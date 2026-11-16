@@ -216,11 +216,6 @@ export const QUESTIONS = {
     choix: ["1", "4", "11", "25"], reponse: 2,
     explication: "11 semaines, non consécutives, en 1991. La chanson a hélas aussi été certifiée disque de platine.",
   }],
-  grenoble: [{
-    type: "qcm", texte: "Qu'ont en commun le chanteur Michel Fugain et le vidéaste Mister V ?",
-    choix: ["Leur ville de naissance", "Ils sont cousins germains", "Leur date d'anniversaire", "Leur année de naissance"], reponse: 0,
-    explication: "Ils sont nés à Grenoble, à deux générations d'écart : Mister V, de son vrai nom Yvick Letexier, y est né le 14 août 1993.",
-  }],
   glabre: [{
     type: "qcm", texte: "Que veut dire « glabre » ?",
     choix: ["Sans poils", "Très pâle", "Collant", "Timide"], reponse: 0,
@@ -308,7 +303,7 @@ export const SERIES = [
   { id: "ecrans", nom: "Écrans", ids: ["quebec", "katerine", "cage", "trump", "mclain"] },
   { id: "manettes", nom: "Manettes", ids: ["mouthwashing", "ecureuil", "justin", "nintendo", "eswc"] },
   { id: "stades", nom: "Stades", ids: ["zidane", "baseball", "fifa", "lej"] },
-  { id: "disques", nom: "Disques", ids: ["around", "bestof", "ritz", "zoubida", "grenoble", "simpsonwave"] },
+  { id: "disques", nom: "Disques", ids: ["around", "bestof", "ritz", "zoubida", "simpsonwave"] },
   { id: "mots", nom: "Dictionnaire", ids: ["glabre", "laudatif", "berezina", "poioumenon", "manicule", "naute", "albanais", "charolais", "cadratin"] },
 ];
 

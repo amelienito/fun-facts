@@ -135,23 +135,38 @@ button.puce:hover { background: rgba(251, 245, 233, 0.2); }
   font-size: calc(var(--titre-taille) * 0.66); line-height: 1.3; letter-spacing: var(--titre-approche);
 }
 html[data-typo="instrument"] .reponses { font-size: calc(var(--titre-taille) * 0.7); }
+/* Les réponses sont des mots de la phrase, mais on doit voir qu'ils se touchent : chacune est posée sur une touche
+   claire, soulignée d'un trait plein, et se remplit sous la souris ou le doigt. */
 .rep {
-  text-align: left; text-decoration: underline; text-decoration-thickness: 0.08em; text-underline-offset: 0.14em;
-  padding: 0.05em 0; border-radius: 0.12em;
-  transition: opacity 0.25s, background 0.2s;
+  text-align: left; text-decoration: none; cursor: pointer;
+  padding: 0.03em 0.2em; margin: 0 -0.05em; border-radius: 0.2em;
+  background: color-mix(in srgb, var(--texte) 9%, transparent); box-shadow: inset 0 -0.1em 0 var(--texte);
+  box-decoration-break: clone; -webkit-box-decoration-break: clone;
+  transition: opacity 0.25s, background 0.2s, color 0.2s, transform 0.15s;
 }
-.rep:hover { text-decoration-thickness: 0.16em; }
-/* au doigt : des lignes plus aérées et une zone tactile plus haute, pour ne pas taper la réponse d'à côté */
-@media (pointer: coarse) {
-  .reponses { line-height: 1.62; }
-  .rep { padding: 0.3em 0; }
-  .fini .rep { padding: 0.05em 0; }
+.reponses:not(.fini) .rep:hover, .reponses:not(.fini) .rep:focus-visible { background: var(--texte); color: var(--fond); }
+.reponses:not(.fini) .rep:active { transform: scale(0.97); }
+.reponses:not(.fini) .rep { animation: rep-arrive 0.5s ease-out backwards; }
+.reponses .rep-groupe:nth-child(2) .rep { animation-delay: 0.08s; } .reponses .rep-groupe:nth-child(3) .rep { animation-delay: 0.16s; } .reponses .rep-groupe:nth-child(4) .rep { animation-delay: 0.24s; }
+@keyframes rep-arrive { from { background: var(--texte); color: var(--fond); } }
+/* sur téléphone (ou au doigt) : une réponse par ligne, de vraies touches de 44 px de haut */
+@media (pointer: coarse), (max-width: 620px) {
+  .reponses { line-height: 1.25; max-width: none; }
+  .rep-groupe { display: block; white-space: normal; margin: 0.42em 0; }
+  .rep { display: inline-block; padding: 0.32em 0.42em; margin: 0; border-radius: 0.28em; min-height: 44px; }
+  .fini .rep-groupe { margin: 0.2em 0; }
+  .fini .rep, .fini .rep.bon { padding: 0.12em 0.42em; min-height: 0; }
 }
+.rep-aide { margin: 14px 0 0; font-size: 0.92rem; font-weight: 700; opacity: 0.72; display: flex; align-items: center; gap: 8px; animation: apparait 0.5s ease-out 0.9s backwards; }
+.rep-aide i { font-style: normal; display: inline-block; animation: rep-doigt 1.3s ease-in-out infinite; }
+@keyframes rep-doigt { 50% { transform: translateY(-5px); } }
+.fini + .rep-aide { display: none; }
+@media (prefers-reduced-motion: reduce) { .reponses:not(.fini) .rep, .rep-aide i { animation: none; } }
 .liant { opacity: 0.5; font-weight: 400; }
 .rep-groupe { white-space: nowrap; }
 .rep-groupe .rep { white-space: normal; }
 sup { font-size: 0.6em; line-height: 0; vertical-align: 0.7em; }
-.fini .rep { cursor: default; text-decoration: none; }
+.fini .rep { cursor: default; background: none; box-shadow: none; }
 .fini .rep.barre { opacity: 0.32; text-decoration: line-through; text-decoration-thickness: 0.09em; }
 .fini .rep.bon { background: var(--texte); color: var(--fond); padding: 0 0.16em; box-decoration-break: clone; -webkit-box-decoration-break: clone; }
 .fini .rep.choisi.barre { opacity: 0.6; }
@@ -643,9 +658,11 @@ dialog.objet-dlg { background: radial-gradient(ellipse at 50% 40%, #fff6e0, #f1e
 .taper-indice { margin: 12px 0 0; font-size: 0.95rem; font-weight: 700; display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; animation: apparait .4s ease-out; }
 .taper-indice[hidden] { display: none; }
 .taper-lettres { display: inline-flex; flex-wrap: wrap; gap: 4px; }
-.taper-lettres i { font-style: normal; font-family: "Bungee", var(--titre); font-size: 0.85rem; min-width: 1.6em; padding: 3px 0; text-align: center; border-radius: 8px; background: var(--texte); color: var(--fond); }
-.taper-lettres i:nth-child(odd) { transform: rotate(-6deg); }
-.taper-lettres i:nth-child(3n) { transform: rotate(8deg) translateY(2px); }
+.taper-lettres i { font-style: normal; font-family: "Bungee", var(--titre); font-size: 0.85rem; min-width: 1.6em; height: 1.9em; display: inline-grid; place-items: center; border-radius: 8px; background: var(--texte); color: var(--fond); }
+.taper-lettres i.vide { background: none; border-radius: 0; box-shadow: inset 0 -3px 0 var(--texte); }
+.taper-lettres i.pose { animation: lettre-pose 0.35s ease-out; }
+.taper-lettres b { min-width: 0.5em; }
+@keyframes lettre-pose { from { transform: translateY(-8px) scale(1.25); opacity: 0; } }
 @keyframes apparait { from { opacity: 0; transform: translateY(4px); } }
 .taper-champ { width: 100%; box-sizing: border-box; font: inherit; font-size: 22px; color: inherit; background: color-mix(in srgb, currentColor 7%, transparent); border: 0; border-bottom: 3px solid currentColor; border-radius: 10px 10px 0 0; padding: 12px 14px; outline: none; }
 .taper-champ:focus { background: color-mix(in srgb, currentColor 12%, transparent); }

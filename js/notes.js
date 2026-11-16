@@ -69,8 +69,6 @@ const S = {
   wikiBeksinski: { nom: "Wikipédia (en)", titre: "Zdzisław Beksiński", url: "https://en.wikipedia.org/wiki/Zdzis%C5%82aw_Beksi%C5%84ski" },
   htNormands: { nom: "History Today", titre: "God and the Normans", url: "https://www.historytoday.com/archive/god-and-normans" },
   wikiRitz: { nom: "Wikipédia (en)", titre: "David Ritz", url: "https://en.wikipedia.org/wiki/David_Ritz" },
-  wikiMisterV: { nom: "Wikipédia (en)", titre: "Mister V (rapper)", url: "https://en.wikipedia.org/wiki/Mister_V_(rapper)" },
-  wikiFugain: { nom: "Wikipédia", titre: "Michel Fugain", url: "https://fr.wikipedia.org/wiki/Michel_Fugain" },
   reussirCharolais: { nom: "Réussir", titre: "Fromages : le charolais reconnu comme AOP", url: "https://www.reussir.fr/lesmarches/fromages-le-charolais-reconnu-comme-aop" },
 };
 
@@ -487,14 +485,6 @@ export const SALLES_NOTES = [
     ],
     sources: [S.wikiZoubida],
     liens: [{ vers: "around", porte: "Une autre chanson répétitive" }],
-  },
-
-  {
-    id: "grenoble", cat: "musique", objet: "cd:vert", nom: "CD grenoblois",
-    porte: "Deux artistes, une même ville",
-    questions: [],
-    sources: [S.wikiFugain, S.wikiMisterV],
-    liens: [{ vers: "zoubida", porte: "Un tube des années 1990" }],
   },
 
   /* ---------- Mots rares ---------- */

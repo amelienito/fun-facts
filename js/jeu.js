@@ -21,7 +21,8 @@ function h(tag, props, ...enfants) {
   return el;
 }
 // Espaces insécables à la française : jamais de « ? » ou de « » » seul en début de ligne.
-const fr = (t) => t.replace(/ ([?!:;»])/g, "\u202F$1").replace(/« /g, "«\u202F");
+// (et un nombre ne quitte ni son « % » ni ses milliers : « 10 % », « 2 500 ans »)
+const fr = (t) => t.replace(/ ([?!:;»])/g, "\u202F$1").replace(/« /g, "«\u202F").replace(/(\d) %/g, "$1\u00A0%").replace(/(\d) (?=\d{3}(?!\d))/g, "$1\u202F");
 const vider = (el, ...enfants) => el.replaceChildren(...enfants.flat(Infinity).filter((e) => e != null && e !== false));
 const melanger = (a) => {
   const t = a.slice();
@@ -34,6 +35,7 @@ const melanger = (a) => {
 // Exposants (10⁻¹⁵) : rendus en vrai <sup>, car la police n'a pas ces caractères.
 const SUP = { "⁰": "0", "¹": "1", "²": "2", "³": "3", "⁴": "4", "⁵": "5", "⁶": "6", "⁷": "7", "⁸": "8", "⁹": "9", "⁻": "-" };
 const riche = (t) => {
+  t = fr(t);
   if (!/[⁰¹²³⁴⁵⁶⁷⁸⁹⁻]/.test(t)) return t;
   return t.split(/([⁰¹²³⁴⁵⁶⁷⁸⁹⁻]+)/).filter(Boolean).map((m) => (SUP[m[0]] ? h("sup", null, [...m].map((c) => SUP[c]).join("")) : m));
 };
@@ -300,6 +302,15 @@ function nouvelleBande(cls) {
   $("fil").append(b);
   return b;
 }
+// Après une réponse : le verdict et l'explication doivent être sous les yeux. S'ils sont sous l'écran (ou cachés par le
+// bandeau du haut), on défile juste ce qu'il faut — jamais plus loin : la suite se demande avec le bouton du bas.
+function amenerVerdict(zone) {
+  requestAnimationFrame(() => {
+    const v = zone && zone.querySelector(".verdict"); if (!v) return;
+    const r = v.getBoundingClientRect(), fin = (zone.querySelector(".gros-bouton") || v).getBoundingClientRect().bottom;
+    if (fin > innerHeight - 24 || r.top < 70) scrollBy({ top: Math.min(r.top - 110, fin - innerHeight + 90), behavior: reduit() ? "auto" : "smooth" });
+  });
+}
 function allerA(b) {
   b.scrollIntoView({ behavior: reduit() ? "auto" : "smooth", block: "start" });
   setTimeout(() => (b.querySelector("h1, h2") || b).focus({ preventScroll: true }), reduit() ? 0 : 450);
@@ -370,15 +381,17 @@ function poser(s, qi, z) {
   opts.forEach(([lib, val], i) => {
     const bouton = h("button", { class: "rep", type: "button", "data-v": String(val), onclick: (e) => repondre(s, qi, z, reps, e.currentTarget, val) }, riche(casse(lib, i, q)));
     const fin = i < opts.length - 2 ? "," : i === opts.length - 1 && q.type === "qcm" ? "\u00A0?" : "";
-    reps.append(h("span", { class: "rep-groupe" }, bouton, fin ? h("span", { class: "liant" }, fin) : null));
-    if (i < opts.length - 1) reps.append(i === opts.length - 2 ? h("span", { class: "liant" }, " ou ") : " ");
+    reps.append(h("span", { class: "rep-groupe" }, i === opts.length - 1 && i > 0 ? h("span", { class: "liant" }, "ou ") : null, bouton, fin ? h("span", { class: "liant" }, fin) : null));
+    if (i < opts.length - 1) reps.append(" ");
   });
+  // les premières fois, on dit quoi faire : les réponses sont dans la phrase, il suffit d'en toucher une
+  const aide = qi === 0 && Object.keys(etat.trouves).length < 2 ? h("p", { class: "rep-aide", "aria-hidden": "true" }, h("i", null, "☝"), matchMedia("(pointer: coarse)").matches ? "Touche ta réponse" : "Clique sur ta réponse") : null;
   vider(z.tete,
     z.zoneObjet, z.passees,
     total > 1 ? h("p", { class: "q-num" }, `Question ${qi + 1} sur ${total}`) : null,
     h("h1", { class: classeQuestion(q.texte), tabindex: "-1" }, riche(q.texte)),
     z.frise,
-    reps);
+    reps, aide);
   if (qi > 0) z.tete.querySelector("h1").focus({ preventScroll: true });
 }
 
@@ -537,19 +550,26 @@ function poserTaper(s, qi, z, q, total) {
     lecture.textContent = `Réponse : ${q.accepte[0]}.`;
     setTimeout(() => repondre(s, qi, z, zone, champ, val), 250);
   };
-  // Indice : si rien n'est tapé au bout de 5 secondes, les lettres de la réponse apparaissent en vrac.
+  // Indice : au bout de 5 secondes sans rien taper, la réponse se dessine case par case — la première lettre d'abord, puis
+  // une de plus toutes les 4 secondes, jusqu'à la moitié du mot. (Avant : les lettres en vrac, qui n'aidaient pas vraiment.)
   const indice = h("p", { class: "taper-indice", hidden: true });
-  const lettres = () => { let l; do l = melanger([...q.accepte[0].toUpperCase()]); while (l.join("") === q.accepte[0].toUpperCase() && new Set(l).size > 1); return l; };
-  const montrerIndice = () => {
-    if (zone.classList.contains("fini") || champ.value.trim()) return;
-    vider(indice, h("span", null, "Indice, les lettres en vrac :"), h("span", { class: "taper-lettres" }, lettres().map((c) => h("i", null, c))));
-    indice.hidden = false;
+  const mot = [...q.accepte[0].toUpperCase()], estLettre = (c) => /[\p{L}\d]/u.test(c);
+  const cases = mot.map((c) => (estLettre(c) ? h("i", { class: "vide" }) : h("b", null, c === " " ? "\u00A0" : c)));
+  const nbLettres = mot.filter(estLettre).length, plafond = Math.max(1, Math.ceil(nbLettres / 2));
+  const ordre = [mot.findIndex(estLettre), ...melanger(mot.map((c, i) => i).filter((i) => estLettre(mot[i]) && i !== mot.findIndex(estLettre)))];
+  let devoilees = 0, minuterie = 0;
+  const devoiler = () => {
+    if (zone.classList.contains("fini") || devoilees >= plafond) return;
+    const i = ordre[devoilees++];
+    cases[i].textContent = mot[i]; cases[i].className = "pose";
+    if (devoilees === 1) { vider(indice, h("span", null, `Indice · ${nbLettres} lettres`), h("span", { class: "taper-lettres" }, cases)); indice.hidden = false; }
+    if (devoilees < plafond) minuterie = setTimeout(devoiler, 4000);
   };
-  let minuterie = setTimeout(montrerIndice, 5000);
+  minuterie = setTimeout(devoiler, 5000);
   champ.addEventListener("input", () => {
     valider.disabled = !champ.value.trim();
-    clearTimeout(minuterie);
-    if (!champ.value.trim()) minuterie = setTimeout(montrerIndice, 5000);
+    clearTimeout(minuterie);   // tant qu'on tape, l'indice attend ; il reprend si on cale
+    if (devoilees < plafond) minuterie = setTimeout(devoiler, devoilees ? 6000 : 5000);
   });
   champ.addEventListener("keydown", (e) => { if (e.key === "Enter" && champ.value.trim()) { e.preventDefault(); finir(accepteTape(champ.value, q)); } });
   valider.addEventListener("click", () => finir(accepteTape(champ.value, q)));
@@ -631,6 +651,7 @@ function repondre(s, qi, z, reps, bouton, val) {
   if (qi < total - 1) {
     vider(z.suite, lignes, h("button", { class: "gros-bouton", type: "button", onclick: () => { z.suite.hidden = true; if (QUESTIONS[s.id][qi + 1].relire !== false) replier(z, q, qi, juste, presque); poser(s, qi + 1, z); } }, "Question suivante"));
     z.suite.hidden = false;
+    amenerVerdict(z.suite);
     return;
   }
   // Dernière question : l'objet se révèle et rejoint la collection.
@@ -777,17 +798,16 @@ function montrerSuite(bloc) {
   }, { threshold: 0.35 });
   requestAnimationFrame(() => {
     guetteur.observe(bloc);
-    // une fois la réponse lue (un peu plus d'une seconde), on descend juste ce qu'il faut pour voir les portes ;
-    // si une annonce est ouverte, on attend qu'elle soit fermée
+    // On ne descend plus tout seul jusqu'aux thèmes (la page filait une seconde après la réponse, sans laisser lire).
+    // La règle est la même partout : la réponse et son explication restent sous les yeux, et le bouton fixe du bas,
+    // « Prochaine question ↓ », emmène à la suite quand on le décide. (Si une annonce est ouverte, on attend qu'elle soit fermée.)
     const descendre = () => {
       if (!bloc.isConnected || bloc.querySelector(".porte.choisie") || suiteEtat.bloc !== bloc) return;
       if (!$("annonce").hidden || banniereFin > performance.now()) { setTimeout(descendre, 400); return; }
-      const r = bloc.getBoundingClientRect();
-      if (r.top > innerHeight - 140) scrollBy({ top: Math.min(r.top - innerHeight + Math.min(r.height, innerHeight * 0.6) + 24, r.top - 90), behavior: reduit() ? "auto" : "smooth" });
-      // le bouton ne sert plus que si on remonte relire : il n'arrive qu'après la descente
-      setTimeout(() => { if (suiteEtat.bloc === bloc) { suiteEtat.pret = true; majBoutonSuite(); } }, 900);
+      amenerVerdict(bloc.closest(".bande"));
+      suiteEtat.pret = true; majBoutonSuite();
     };
-    setTimeout(descendre, 1300);
+    setTimeout(descendre, 350);
   });
   bloc.addEventListener("click", (e) => { if (e.target.closest(".porte")) { suiteEtat.bloc = null; majBoutonSuite(); if (guetteur) guetteur.disconnect(); } });
 }
@@ -885,7 +905,7 @@ function afficherPlusOuMoins(ensuite, exclu) {
     if (partie) { partie.score += pts; partie.questions++; if (bons >= MANCHES / 2) partie.bonnes++; }
     if (bons === MANCHES) { combo++; confettis(innerWidth / 2, innerHeight / 2, ["#FFC93C", "#FBF5E9", "#15131A"]); }
     vider(fin, h("p", { class: "verdict" }, h("b", null, bons === MANCHES ? "Sans faute." : `${bons} sur ${MANCHES}.`), h("span", { class: "gain" }, `+${pts.toLocaleString("fr-FR")} points`)),
-      h("button", { class: "gros-bouton", type: "button", onclick: ensuite }, "Reprendre le terrier"));
+      h("button", { class: "gros-bouton", type: "button", onclick: ensuite }, "Revenir aux questions"));
   };
   vider(b,
     h("div", { class: "etiquettes" }, h("span", { class: "etiq" }, "Intermède"), h("span", { class: "etiq pepite" }, "Sans faute : +2 000")),
@@ -929,7 +949,7 @@ function afficherPaires(ensuite, exclu) {
     gagner(pts, innerWidth / 2, mots.getBoundingClientRect().top);
     if (partie) { partie.score += pts; partie.questions++; if (erreurs <= 2) partie.bonnes++; }
     vider(fin, h("p", { class: "verdict" }, h("b", null, erreurs ? pluriel(erreurs, "erreur", "erreurs") + "." : "Sans faute."), h("span", { class: "gain" }, `+${pts.toLocaleString("fr-FR")} points`)),
-      h("button", { class: "gros-bouton", type: "button", onclick: ensuite }, "Reprendre le terrier"));
+      h("button", { class: "gros-bouton", type: "button", onclick: ensuite }, "Revenir aux questions"));
   };
   vider(b,
     h("div", { class: "etiquettes" }, h("span", { class: "etiq" }, "Intermède"), h("span", { class: "etiq pepite" }, "Jusqu'à +6 000")),
@@ -973,7 +993,7 @@ function afficherEclair(ensuite, exclu) {
     carte.after(h("ol", { class: "recap" }, items.slice(0, reponses.length).map((a, k) => h("li", { class: reponses[k] ? "ok" : "ko" },
       h("span", { class: "a-q" }, riche(a.question)), h("span", null, "Réponse : ", riche(a.bonne))))));
     vider(fin, h("p", { class: "verdict" }, h("b", null, bons ? `+${pts.toLocaleString("fr-FR")} points` : `+${pts} points`), h("span", { class: "gain" }, `${pluriel(bons, "bonne réponse", "bonnes réponses")} en ${DUREE} secondes max`)),
-      h("button", { class: "gros-bouton", type: "button", onclick: ensuite }, "Reprendre le terrier"));
+      h("button", { class: "gros-bouton", type: "button", onclick: ensuite }, "Revenir aux questions"));
   };
   const choisir = (v) => {
     if (fini || !debut) return;
@@ -1051,7 +1071,8 @@ function finPartie() {
   const b = nouvelleBande("fin-partie");
   const score = h("span", { class: "score-geant" }, "0");
   const series = SERIES.map((x) => ({ x, avant: p.seriesAvant[x.id], apres: x.ids.filter((id) => etat.trouves[id]).length })).filter((o) => o.apres > o.avant);
-  const rejouer = (n) => nouvellePartie(n);
+  // rejouer : entre deux parties, parfois, une coupure pub (une réclame pour un autre jeu d'OSB Corporation, qu'on peut passer)
+  const rejouer = async (n) => { if (window.OSB) { try { await OSB.pub({ ici: "fun-facts" }); } catch (e) {} } nouvellePartie(n); };
   rejouer.libelle = "Rejouer";
   vider(b,
     h("div", { class: "etiquettes" }, h("span", { class: "etiq" }, `Partie de ${p.total}`), record ? h("span", { class: "etiq pepite" }, ancien ? "Nouveau record" : "Premier record") : null),
@@ -1067,6 +1088,8 @@ function finPartie() {
     ancien && !record ? h("p", { class: "consigne" }, `Ton record sur ${p.total} questions : ${ancien} points.`) : null,
     h("h2", { class: "sous-titre" }, "On remet ça ?"),
     choixDuree(rejouer));
+  // en fin de visite : « Un retour ? Un commentaire ? Un bug à partager ? » et les autres jeux (osb.js, le fichier commun à tous les jeux)
+  if (window.OSB) OSB.pied(b, { ici: "fun-facts", contexte: `fin de partie, ${p.total} questions` });
   partie = null;
   majHud();
   allerA(b);
