@@ -141,6 +141,12 @@ html[data-typo="instrument"] .reponses { font-size: calc(var(--titre-taille) * 0
   transition: opacity 0.25s, background 0.2s;
 }
 .rep:hover { text-decoration-thickness: 0.16em; }
+/* au doigt : des lignes plus aérées et une zone tactile plus haute, pour ne pas taper la réponse d'à côté */
+@media (pointer: coarse) {
+  .reponses { line-height: 1.62; }
+  .rep { padding: 0.3em 0; }
+  .fini .rep { padding: 0.05em 0; }
+}
 .liant { opacity: 0.5; font-weight: 400; }
 .rep-groupe { white-space: nowrap; }
 .rep-groupe .rep { white-space: normal; }
@@ -666,7 +672,8 @@ dialog.objet-dlg { background: radial-gradient(ellipse at 50% 40%, #fff6e0, #f1e
 @keyframes bn-pointe { to { transform: translate(4px, -5px); } }
 
 /* le retour aux créations d'Amélien (le hub), toujours là en haut à gauche */
-.retour-hub { display: inline-flex; align-items: center; gap: 2px; margin-right: 10px; padding: 6px 10px; border-radius: 999px; background: rgba(251, 245, 233, 0.1); color: inherit; font-weight: 800; font-size: 0.85rem; line-height: 1; text-decoration: none; letter-spacing: 0.02em; transition: background 0.2s; }
+.retour-hub { position: relative; display: inline-flex; align-items: center; gap: 2px; margin-right: 10px; padding: 6px 10px; border-radius: 999px; background: rgba(251, 245, 233, 0.1); color: inherit; font-weight: 800; font-size: 0.85rem; line-height: 1; text-decoration: none; letter-spacing: 0.02em; transition: background 0.2s; }
+.retour-hub::after { content: ""; position: absolute; inset: -10px -6px; }   /* la zone tactile dépasse la pastille : plus facile au doigt */
 .retour-hub:hover { background: rgba(251, 245, 233, 0.2); }
 .retour-hub + .marque { margin-right: auto; }
 @media (max-width: 480px) { .retour-hub span { display: none; } .retour-hub { padding: 6px 9px; margin-right: 6px; } }
