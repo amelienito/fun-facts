@@ -1226,7 +1226,7 @@ function ouvrirCollection() {
   const dlg = $("dlg-collection");
   const n = nbTrouves();
   vider(dlg,
-    tete("Ta collection", `${n} sur ${TOTAL} · ${Math.round((n / TOTAL) * 100)} % du terrier · record de combo : ${etat.record}`, dlg),
+    tete("Ta collection", `${n} sur ${TOTAL} · ${Math.round((n / TOTAL) * 100)} % du jeu · record de combo : ${etat.record}`, dlg),
     h("div", { class: "progression" }, h("i", { style: `width:${(n / TOTAL) * 100}%` })),
     nuage.actif ? blocSauvegarde(dlg) : null,
     h("div", { class: "t-corps" }, SERIES.map((serie) => {
